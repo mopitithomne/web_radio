@@ -44,6 +44,40 @@
         <p id="empty-state" class="empty-state" hidden>No stations found. Try another search.</p>
       </section>
 
+      <section class="radio-details" aria-label="Radio details">
+        <section class="track-panel" aria-labelledby="track-heading">
+          <div class="details-heading">
+            <div>
+              <p class="eyebrow">ON THE AIR</p>
+              <h2 id="track-heading">Track info</h2>
+            </div>
+            <span id="metadata-status" class="metadata-status" role="status">Select a station</span>
+          </div>
+          <p id="current-track" class="current-track">Tune in to see what’s playing.</p>
+          <h3 class="history-heading">Recently played</h3>
+          <ol id="track-history" class="track-history">
+            <li>Track information will appear here.</li>
+          </ol>
+        </section>
+        <section class="schedule-panel" aria-labelledby="schedule-heading">
+          <div class="details-heading">
+            <div>
+              <p class="eyebrow">AROUND THE CLOCK</p>
+              <h2 id="schedule-heading">On the schedule</h2>
+            </div>
+            <time id="utc-clock" class="utc-clock"></time>
+          </div>
+          <p class="schedule-note">Times shown in UTC</p>
+          <ul class="schedule-list">
+            <li><span>Daily 00:00–06:00</span><strong>Late night</strong></li>
+            <li><span>Mon–Fri 06:00–18:00</span><strong>Workday mix</strong></li>
+            <li><span>Mon–Thu 18:00–00:00</span><strong>Evening sounds</strong></li>
+            <li><span>Fri 18:00–Sun 00:00</span><strong>Weekend party</strong></li>
+          </ul>
+          <a class="chat-link" href="https://kiwiirc.com/nextclient/irc.pieter.com/" target="_blank" rel="noopener noreferrer">Join the listener chat <span aria-hidden="true">↗</span></a>
+        </section>
+      </section>
+
       <footer class="player" aria-label="Radio player">
         <div class="now-playing">
           <div id="player-art" class="player-art" aria-hidden="true">♫</div>

@@ -5,6 +5,7 @@ const stations = [
     genre: "Ambient · Downtempo",
     description: "A nicely chilled plate of ambient beats",
     stream: "https://ice1.somafm.com/groovesalad-128-mp3",
+    metadataId: "groovesalad",
     color: "#c7f36b",
     symbol: "◌",
   },
@@ -14,6 +15,7 @@ const stations = [
     genre: "Ambient · Atmospheric",
     description: "Atmospheric textures with no beats",
     stream: "https://ice1.somafm.com/dronezone-128-mp3",
+    metadataId: "dronezone",
     color: "#a9a2f5",
     symbol: "〰",
   },
@@ -23,6 +25,7 @@ const stations = [
     genre: "Indie · Alternative",
     description: "New and classic indie pop",
     stream: "https://ice1.somafm.com/indiepop-128-mp3",
+    metadataId: "indiepop",
     color: "#f4a77b",
     symbol: "✳",
   },
@@ -32,6 +35,7 @@ const stations = [
     genre: "Lounge · Spy",
     description: "The soundtrack for your stylish, mysterious life",
     stream: "https://ice1.somafm.com/secretagent-128-mp3",
+    metadataId: "secretagent",
     color: "#edcf72",
     symbol: "◈",
   },
@@ -41,6 +45,7 @@ const stations = [
     genre: "Electronic · Chill",
     description: "Sensuous and mellow vocals",
     stream: "https://ice1.somafm.com/lush-128-mp3",
+    metadataId: "lush",
     color: "#e78eb8",
     symbol: "✿",
   },
@@ -50,6 +55,7 @@ const stations = [
     genre: "Psych · Progressive",
     description: "Progressive from the past to the future",
     stream: "https://ice1.somafm.com/thetrip-128-mp3",
+    metadataId: "thetrip",
     color: "#78c8c3",
     symbol: "↗",
   },
@@ -66,9 +72,53 @@ const playerGenre = document.querySelector("#player-genre");
 const playerArt = document.querySelector("#player-art");
 const playerStatus = document.querySelector("#player-status");
 const volume = document.querySelector("#volume");
+const currentTrack = document.querySelector("#current-track");
+const trackHistory = document.querySelector("#track-history");
+const metadataStatus = document.querySelector("#metadata-status");
+const utcClock = document.querySelector("#utc-clock");
 let currentStation = null;
 let filter = "all";
 const favorites = new Set(JSON.parse(localStorage.getItem("airwave-favorites") || "[]"));
+
+function renderTrackMetadata(tracks) {
+  const entries = Array.isArray(tracks) ? tracks.filter((track) => track?.title && track?.artist) : [];
+  if (!entries.length) {
+    currentTrack.textContent = "Track information is not available right now.";
+    trackHistory.replaceChildren();
+    return false;
+  }
+
+  const firstTrack = entries[0];
+  currentTrack.textContent = `${firstTrack.artist} — ${firstTrack.title}`;
+  const history = entries.slice(1, 6);
+  trackHistory.replaceChildren(...history.map((track) => {
+    const item = document.createElement("li");
+    item.textContent = `${track.artist} — ${track.title}`;
+    return item;
+  }));
+  if (!history.length) {
+    const item = document.createElement("li");
+    item.textContent = "No recent tracks available.";
+    trackHistory.append(item);
+  }
+  return true;
+}
+
+async function loadTrackMetadata(station) {
+  metadataStatus.textContent = "Loading track info…";
+  try {
+    const response = await fetch(`https://somafm.com/songs/${station.metadataId}.json`);
+    if (!response.ok) throw new Error("Metadata request failed");
+    const data = await response.json();
+    if (currentStation?.id !== station.id) return;
+    metadataStatus.textContent = renderTrackMetadata(data.songs) ? "Updated just now" : "No track info";
+  } catch {
+    if (currentStation?.id !== station.id) return;
+    currentTrack.textContent = "Track information is unavailable. The live stream may still play.";
+    trackHistory.replaceChildren();
+    metadataStatus.textContent = "Metadata unavailable";
+  }
+}
 
 function renderStations() {
   const query = searchInput.value.trim().toLowerCase();
@@ -135,6 +185,7 @@ async function selectStation(station) {
 
   currentStation = station;
   audio.src = station.stream;
+  loadTrackMetadata(station);
   playerStation.textContent = station.name;
   playerGenre.textContent = station.genre;
   playerArt.textContent = station.symbol;
@@ -182,4 +233,19 @@ audio.addEventListener("error", () => {
 audio.addEventListener("play", () => { playIcon.textContent = "Ⅱ"; playButton.setAttribute("aria-label", "Pause"); });
 audio.addEventListener("pause", () => { playIcon.textContent = "▶"; playButton.setAttribute("aria-label", "Play"); renderStations(); });
 
+function updateUtcClock() {
+  utcClock.textContent = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "UTC",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  }).format(new Date()) + " UTC";
+}
+
+updateUtcClock();
+setInterval(updateUtcClock, 1000);
+setInterval(() => {
+  if (currentStation) loadTrackMetadata(currentStation);
+}, 60_000);
 renderStations();
