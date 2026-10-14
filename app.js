@@ -1,5 +1,25 @@
 const stations = [
   {
+    id: "eilo-hard-techno",
+    name: "EILO Hard Techno",
+    genre: "Hard Techno · Industrial",
+    description: "Hard techno from EILO Radio",
+    stream: "https://eilo.org/streamer.php?ch=hard",
+    metadataId: null,
+    color: "#ff4b38",
+    symbol: "↯",
+  },
+  {
+    id: "hypertechno",
+    name: "Hypertechno",
+    genre: "Hard Techno · Rave",
+    description: "Hard techno, acid, rave and high-energy remixes",
+    stream: "https://0nlineradio.radioho.st/technolovers-hypertechno?ref=radio-browser26",
+    metadataId: null,
+    color: "#d5ff35",
+    symbol: "//",
+  },
+  {
     id: "groove-salad",
     name: "Groove Salad",
     genre: "Ambient · Downtempo",
@@ -105,6 +125,13 @@ function renderTrackMetadata(tracks) {
 }
 
 async function loadTrackMetadata(station) {
+  if (!station.metadataId) {
+    currentTrack.textContent = "Live track information is not provided by this station.";
+    trackHistory.replaceChildren();
+    metadataStatus.textContent = "No track info";
+    return;
+  }
+
   metadataStatus.textContent = "Loading track info…";
   try {
     const response = await fetch(`https://somafm.com/songs/${station.metadataId}.json`);
