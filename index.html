@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#10120f">
+    <title>Airwave — Internet Radio</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="Airwave home">
+          <span class="brand-mark" aria-hidden="true">◖))</span>
+          <span>airwave</span>
+        </a>
+        <span class="live-indicator"><span></span> LIVE RADIO</span>
+      </header>
+
+      <section class="intro" aria-labelledby="page-title">
+        <p class="eyebrow">YOUR FREQUENCY, YOUR MOMENT</p>
+        <h1 id="page-title">A little more <em>in tune.</em></h1>
+        <p class="intro-copy">Good sounds from around the internet. Find a station and settle in.</p>
+      </section>
+
+      <section class="station-section" aria-labelledby="stations-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">THE LINEUP</p>
+            <h2 id="stations-heading">Pick your station</h2>
+          </div>
+          <label class="search">
+            <span class="visually-hidden">Search stations</span>
+            <span aria-hidden="true">⌕</span>
+            <input id="station-search" type="search" placeholder="Search stations" autocomplete="off">
+          </label>
+        </div>
+        <div class="filters" role="group" aria-label="Filter stations">
+          <button class="filter-button active" type="button" data-filter="all" aria-pressed="true">All stations</button>
+          <button class="filter-button" type="button" data-filter="favorites" aria-pressed="false">♡ Favorites</button>
+        </div>
+        <div id="station-list" class="station-grid" aria-live="polite"></div>
+        <p id="empty-state" class="empty-state" hidden>No stations found. Try another search.</p>
+      </section>
+
+      <section class="radio-details" aria-label="Radio details">
+        <section class="track-panel" aria-labelledby="track-heading">
+          <div class="details-heading">
+            <div>
+              <p class="eyebrow">ON THE AIR</p>
+              <h2 id="track-heading">Track info</h2>
+            </div>
+            <span id="metadata-status" class="metadata-status" role="status">Select a station</span>
+          </div>
+          <p id="current-track" class="current-track">Tune in to see what’s playing.</p>
+          <h3 class="history-heading">Recently played</h3>
+          <ol id="track-history" class="track-history">
+            <li>Track information will appear here.</li>
+          </ol>
+        </section>
+        <section class="schedule-panel" aria-labelledby="schedule-heading">
+          <div class="details-heading">
+            <div>
+              <p class="eyebrow">AROUND THE CLOCK</p>
+              <h2 id="schedule-heading">On the schedule</h2>
+            </div>
+            <time id="utc-clock" class="utc-clock"></time>
+          </div>
+          <p class="schedule-note">Times shown in UTC</p>
+          <ul class="schedule-list">
+            <li><span>Daily 00:00–06:00</span><strong>Late night</strong></li>
+            <li><span>Mon–Fri 06:00–18:00</span><strong>Workday mix</strong></li>
+            <li><span>Mon–Thu 18:00–00:00</span><strong>Evening sounds</strong></li>
+            <li><span>Fri 18:00–Sun 00:00</span><strong>Weekend party</strong></li>
+          </ul>
+          <a class="chat-link" href="https://kiwiirc.com/nextclient/irc.pieter.com/" target="_blank" rel="noopener noreferrer">Join the listener chat <span aria-hidden="true">↗</span></a>
+        </section>
+      </section>
+
+      <footer class="player" aria-label="Radio player">
+        <div class="now-playing">
+          <div id="player-art" class="player-art" aria-hidden="true">♫</div>
+          <div class="track-copy">
+            <span class="eyebrow">NOW PLAYING</span>
+            <strong id="player-station">Choose a station</strong>
+            <span id="player-genre">Your next favorite is a click away</span>
+          </div>
+        </div>
+        <div class="player-controls">
+          <button id="play-button" class="play-button" type="button" aria-label="Play" disabled>
+            <span id="play-icon" aria-hidden="true">▶</span>
+          </button>
+          <span id="player-status" class="player-status" role="status">Ready when you are</span>
+        </div>
+        <label class="volume-control">
+          <span aria-hidden="true">◖</span>
+          <span class="visually-hidden">Volume</span>
+          <input id="volume" type="range" min="0" max="1" step="0.01" value="0.7">
+        </label>
+        <audio id="audio-player" preload="none"></audio>
+      </footer>
+    </main>
+  </body>
+</html>
